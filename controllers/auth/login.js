@@ -2,7 +2,8 @@ import UserInfo from '../../models/userModel.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import sendEmail from '../../utilities/sendEmail.js'
-// import sendEmail from '../utils/sendEmail.js'
+import Session from '../../models/Session.js'
+import { v4 as uuidv4 } from 'uuid'
 
 const jwtSecret = process.env.JWT_SECRET
 
@@ -32,6 +33,26 @@ export const login = async (req, res) => {
       expiresIn: '30m'
     })
 
+    // Create session
+    const sessionId = uuidv4()
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000) // 30 mins
+
+    await Session.create({
+      sessionId,
+      userId: user._id,
+      role: user.role,
+      expiresAt
+    })
+
+    // Set httpOnly cookie
+    res.cookie('sessionId', sessionId, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 30 * 60 * 1000
+    })
+    console.log('Session ID set:', sessionId)
+
     // Send login confirmation email to User
     await sendEmail(
       user.email,
@@ -58,16 +79,56 @@ export const login = async (req, res) => {
       `
     )
 
-    res.status(200).json({
-      status: 'ok',
-      data: {
-        token,
-        userId: user._id,
-        role: user.role
-      }
+    res.json({
+      message: 'Login successful',
+      user: { id: user._id, role: user.role, email: user.email }
     })
   } catch (error) {
     console.error(error)
     res.status(500).json({ status: 'error', message: 'server error' })
   }
+}
+
+export const logout = async (req, res) => {
+  try {
+    const sessionId = req.cookies.sessionId
+    if (sessionId) await Session.deleteOne({ sessionId })
+
+    res.clearCookie('sessionId', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
+    })
+
+    res.json({ message: 'Logged out successfully' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
+export const verifySession = async (req, res, next) => {
+  try {
+    const sessionId = req.cookies.sessionId
+
+    console.log('Session ID:', sessionId)
+    if (!sessionId) return res.status(401).json({ error: 'Not authenticated' })
+
+    const session = await Session.findOne({ sessionId })
+    if (!session || session.expiresAt < new Date()) {
+      return res.status(401).json({ error: 'Session expired' })
+    }
+
+    // Attach user info to request
+    req.user = { id: session.userId, role: session.role }
+    next()
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: 'Server error' })
+  }
+}
+
+export const getMe = async (req, res) => {
+  const user = await UserInfo.findById(req.user.id).select('-password')
+  res.json({ user })
 }
