@@ -114,12 +114,6 @@ export const getAllDeposits = async (req, res) => {
 
 // Update deposit status and credit wallet if success
 export const updateDepositStatus = async (req, res) => {
-  const { status } = req.body
-
-  if (!status) {
-    console.log({ error: 'Status is required' })
-  }
-
   try {
     const { status } = req.body // "success" | "rejected"
     const deposit = await DepositModel.findById(req.params.id).populate(
