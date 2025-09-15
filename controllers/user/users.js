@@ -13,7 +13,7 @@ export const Users = async (req, res) => {
 
 // update user info
 export const updateUser = async (req, res) => {
-  console.log(req.params, req.body)
+  // console.log(req.params, req.body)
   try {
     const { userId } = req.params
     const { firstname, lastname, email, phoneNumber, userCountry } = req.body
@@ -33,7 +33,7 @@ export const updateUser = async (req, res) => {
 
 // update wallet balance
 export const updateWalletBalance = async (req, res) => {
-  console.log(req.params, req.body)
+  // console.log(req.params, req.body)
   try {
     const { userId, walletId } = req.params
     let { amount, action } = req.body // action: "add" | "subtract"
@@ -49,7 +49,7 @@ export const updateWalletBalance = async (req, res) => {
       userId: new mongoose.Types.ObjectId(userId)
     })
 
-    console.log(wallet)
+    // console.log(wallet)
     if (!wallet) return res.status(404).json({ error: 'Wallet not found' })
 
     if (action === 'add') {

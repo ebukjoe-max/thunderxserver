@@ -170,7 +170,7 @@ export const getAllUserInvestments = async (req, res) => {
 }
 
 export const createInvestmentplan = async (req, res) => {
-  console.log('Create Plan Req Body:', req.body)
+  // console.log('Create Plan Req Body:', req.body)
   try {
     const {
       category,
@@ -192,11 +192,11 @@ export const createInvestmentplan = async (req, res) => {
       capitalBack,
       category
     })
-    console.log('New Investment Plan Created:', newPlan)
+    // console.log('New Investment Plan Created:', newPlan)
     return res.status(201).json({ status: 'ok', data: newPlan })
   } catch (error) {
     console.error('API Create Plan Error:', error)
-    console.log('Error Details:', error)
+    console.error('Error Details:', error)
     return res
       .status(500)
       .json({ status: 'error', message: 'Internal server error' })

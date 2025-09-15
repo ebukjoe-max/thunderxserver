@@ -48,7 +48,7 @@ export const updateKycStatus = async (req, res) => {
 
 // Fetch user KYC
 export const getUserKyc = async (req, res) => {
-  console.log('Fetching KYC for user:', req.params.userId)
+  // console.log('Fetching KYC for user:', req.params.userId)
   try {
     const user = await User.findById(req.params.userId).select(
       'firstname lastname email kyc'

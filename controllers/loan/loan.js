@@ -46,7 +46,7 @@ export const updateLoan = async (req, res) => {
 }
 
 export const applyForLoan = async (req, res) => {
-  console.log('Applying for loan:', req.body)
+  // console.log('Applying for loan:', req.body)
   try {
     const { userId, walletId, loanId, amount, documentUrl } = req.body
 

@@ -7,7 +7,7 @@ import sendEmail from '../../utilities/sendEmail.js'
 import Transactions from '../../models/Transaction.js'
 
 const register = async (req, res) => {
-  console.log('Registering user:', req.body)
+  // console.log('Registering user:', req.body)
   const firstname = req.body.firstname?.trim()
   const surname = req.body.surname?.trim()
   const email = req.body.email?.trim().toLowerCase()

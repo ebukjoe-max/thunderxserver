@@ -9,7 +9,7 @@ const jwtSecret = process.env.JWT_SECRET
 
 export const login = async (req, res) => {
   const { email, password } = req.body
-  console.log(email, password)
+  // console.log(email, password)
 
   try {
     const user = await UserInfo.findOne({ email })
@@ -51,7 +51,7 @@ export const login = async (req, res) => {
       sameSite: 'lax',
       maxAge: 30 * 60 * 1000
     })
-    console.log('Session ID set:', sessionId)
+    // console.log('Session ID set:', sessionId)
 
     // Send login confirmation email to User
     await sendEmail(
@@ -111,7 +111,7 @@ export const verifySession = async (req, res, next) => {
   try {
     const sessionId = req.cookies.sessionId
 
-    console.log('Session ID:', sessionId)
+    // console.log('Session ID:', sessionId)
     if (!sessionId) return res.status(401).json({ error: 'Not authenticated' })
 
     const session = await Session.findOne({ sessionId })
@@ -129,6 +129,19 @@ export const verifySession = async (req, res, next) => {
 }
 
 export const getMe = async (req, res) => {
-  const user = await UserInfo.findById(req.user.id).select('-password')
-  res.json({ user })
+  try {
+    const user = await UserInfo.findById(req.user.id).select(
+      '-password -hashedPassword'
+    ) // combine fields in a single string
+
+    if (!user) return res.status(404).json({ error: 'User not found' })
+
+    res.json({
+      userId: user._id,
+      role: user.role
+    })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Server error' })
+  }
 }
