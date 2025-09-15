@@ -18,6 +18,7 @@ export const getWithdrawals = async (req, res) => {
 }
 
 export const updateWithdrawalStatus = async (req, res) => {
+  console.log(req.body)
   try {
     const { status } = req.body // "approved" | "rejected" | "pending"
     const withdrawal = await WithdrawalModel.findById(req.params.id).populate(
@@ -29,7 +30,7 @@ export const updateWithdrawalStatus = async (req, res) => {
 
     // ✅ Update withdrawal status
     withdrawal.status = status
-    if (status === 'approved') {
+    if (status === 'success') {
       withdrawal.approvedAt = new Date()
     } else {
       withdrawal.approvedAt = null
@@ -38,7 +39,7 @@ export const updateWithdrawalStatus = async (req, res) => {
 
     // ✅ Map withdrawal status → transaction status
     let txStatus = 'pending'
-    if (status === 'approved') txStatus = 'success'
+    if (status === 'success') txStatus = 'success'
     if (status === 'rejected') txStatus = 'failed'
 
     await Transactions.findByIdAndUpdate(withdrawal.transactionId, {
@@ -50,25 +51,25 @@ export const updateWithdrawalStatus = async (req, res) => {
       let subject = 'Withdrawal Update'
       let body = ''
 
-      if (status === 'approved') {
+      if (status === 'success') {
         subject = 'Withdrawal Approved'
         body = `
           <p>Hi <b>${withdrawal.userId.firstname}</b>,</p>
-          <p>Your withdrawal of <b>${withdrawal.amount} ${withdrawal.coin}</b> via <b>${withdrawal.method}</b> has been <span style="color:green"><b>approved</b></span>.</p>
+          <p>Your withdrawal of <b>$${withdrawal.amount} worth of ${withdrawal.coin}</b> through<b>${withdrawal.method}</b> has been <span style="color:green"><b>approved</b></span>.</p>
           <p>The funds will be available shortly.</p>
         `
       } else if (status === 'rejected') {
         subject = 'Withdrawal Rejected'
         body = `
           <p>Hi <b>${withdrawal.userId.firstname}</b>,</p>
-          <p>Your withdrawal of <b>${withdrawal.amount} ${withdrawal.coin}</b> via <b>${withdrawal.method}</b> has been <span style="color:red"><b>rejected</b></span>.</p>
+          <p>Your withdrawal of <b>$${withdrawal.amount} worth of ${withdrawal.coin}</b> through<b>${withdrawal.method}</b> has been <span style="color:red"><b>rejected</b></span>.</p>
           <p>Please contact support if you believe this was a mistake.</p>
         `
       } else {
         subject = 'Withdrawal Pending'
         body = `
           <p>Hi <b>${withdrawal.userId.firstname}</b>,</p>
-          <p>Your withdrawal of <b>${withdrawal.amount} ${withdrawal.coin}</b> is still <b>pending</b> review.</p>
+          <p>Your withdrawal of <b>$${withdrawal.amount} worth of ${withdrawal.coin}</b> is still <b>pending</b> review.</p>
         `
       }
 
