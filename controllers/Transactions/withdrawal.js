@@ -112,7 +112,7 @@ export const withdrawFunds = async (req, res) => {
       'Withdrawal Request Submitted',
       `
         <p>Hi <b>${user.firstname}</b>,</p>
-        <p>We have received your withdrawal request of <b>${amount} ${walletSymbol}</b> via <b>${method}</b>.</p>
+        <p>We have received your withdrawal request of <b>$${amount}</b> via <b>${method}</b>.</p>
         <p>Your request is currently <b>pending admin approval</b>.</p>
         <p>Transaction ID: <code>${transaction._id}</code></p>
       `
@@ -127,7 +127,7 @@ export const withdrawFunds = async (req, res) => {
         user.email
       }) has requested a withdrawal.</p>
         <ul>
-          <li><b>Amount:</b> ${amount} ${walletSymbol}</li>
+          <li><b>Amount:</b> $${amount}</li>
           <li><b>Method:</b> ${method}</li>
           <li><b>Details:</b> ${JSON.stringify(details)}</li>
           <li><b>Transaction ID:</b> ${transaction._id}</li>

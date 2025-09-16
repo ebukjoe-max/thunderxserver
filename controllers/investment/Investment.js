@@ -97,9 +97,9 @@ export const postUserInvestment = async (req, res) => {
         <p>Your investment has been started successfully:</p>
         <ul>
           <li><b>Plan:</b> ${plan.name}</li>
-          <li><b>Amount:</b> ${amount} ${walletSymbol}</li>
+          <li><b>Amount:</b> $${amount}</li>
           <li><b>Duration:</b> ${duration} days</li>
-          <li><b>Expected Return:</b> ${expectedReturn} ${walletSymbol}</li>
+          <li><b>Expected Return:</b> $${expectedReturn}</li>
         </ul>
         <p>You can track your investment progress in your dashboard.</p>
         <p>Thank you for trusting us.</p>
@@ -117,8 +117,8 @@ export const postUserInvestment = async (req, res) => {
           <li><b>User:</b> ${user.firstname} ${user.lastname}</li>
           <li><b>Email:</b> ${user.email}</li>
           <li><b>Plan:</b> ${plan.name}</li>
-          <li><b>Amount:</b> ${amount} ${walletSymbol}</li>
-          <li><b>Expected Return:</b> ${expectedReturn} ${walletSymbol}</li>
+          <li><b>Amount:</b> $${amount}</li>
+          <li><b>Expected Return:</b> $${expectedReturn}</li>
         </ul>
         <p>Login to the admin panel for more details.</p>
       `
