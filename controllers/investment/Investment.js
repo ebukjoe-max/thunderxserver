@@ -48,6 +48,9 @@ export const postUserInvestment = async (req, res) => {
         .json({ success: false, msg: 'Insufficient wallet balance' })
     }
 
+    wallet.balance -= amount
+    await wallet.save()
+
     // Calculate expected return: daily profit * duration
     const duration = parseInt(plan.payoutFrequency, 10) || 0
     const totalProfit = amount * (plan.profitRate / 100) * duration
