@@ -43,12 +43,15 @@ export const login = async (req, res) => {
     })
 
     // Set httpOnly cookie
+    const isProd = process.env.NODE_ENV === 'production'
+
     res.cookie('sessionId', sessionId, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 30 * 60 * 1000
+      secure: isProd, // true on Netlify, false locally
+      sameSite: isProd ? 'None' : 'Lax', // cross-site support only in prod
+      maxAge: 60 * 60 * 1000 // 30 minutes
     })
+
     // console.log('Session ID set:', sessionId)
 
     // Send login confirmation email to User
