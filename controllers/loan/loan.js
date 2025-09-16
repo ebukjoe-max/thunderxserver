@@ -6,6 +6,7 @@ import UserWallet from '../../models/UserWallet.js'
 // import UserWallet from '../../models/UserWallet.js'
 
 export const createLoanPlan = async (req, res) => {
+  console.log('Creating loan plan:', req.body)
   try {
     const newLoanPlan = await LoanPlan.create(req.body)
     res.status(201).json({ status: 'ok', data: newLoanPlan })

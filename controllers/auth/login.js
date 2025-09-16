@@ -127,7 +127,6 @@ export const verifySession = async (req, res, next) => {
 }
 
 export const getMe = async (req, res) => {
-  console.log('GetMe user:', req.body)
   try {
     const user = await UserInfo.findById(req.user.id).select(
       '-password -hashedPassword'

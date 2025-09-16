@@ -2,7 +2,6 @@ import User from '../../models/userModel.js'
 import UserWallet from '../../models/UserWallet.js'
 
 const getUserWithWallets = async (req, res) => {
-  console.log('GetUserWithWallets user:', req.body)
   try {
     const userId = req.params.userId // or from auth: req.user._id
 
