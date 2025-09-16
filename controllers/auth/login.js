@@ -3,13 +3,11 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import sendEmail from '../../utilities/sendEmail.js'
 import Session from '../../models/Session.js'
-import { v4 as uuidv4 } from 'uuid'
 
 const jwtSecret = process.env.JWT_SECRET
 
 export const login = async (req, res) => {
   const { email, password } = req.body
-  // console.log(email, password)
 
   try {
     const user = await UserInfo.findOne({ email })
@@ -34,7 +32,7 @@ export const login = async (req, res) => {
     })
 
     // Create session
-    const sessionId = uuidv4()
+    const sessionId = Math.random().toString(36).substring(2)
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000) // 30 mins
 
     await Session.create({
