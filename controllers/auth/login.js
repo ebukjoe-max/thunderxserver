@@ -47,8 +47,8 @@ export const login = async (req, res) => {
 
     res.cookie('sessionId', sessionId, {
       httpOnly: true,
-      secure: isProd, // true on Netlify, false locally
-      sameSite: isProd ? 'None' : 'Lax', // cross-site support only in prod
+      secure: false, // true on Netlify, false locally
+      sameSite: 'None', // cross-site support only in prod
       maxAge: 60 * 60 * 1000 // 30 minutes
     })
 
@@ -95,10 +95,11 @@ export const logout = async (req, res) => {
     const sessionId = req.cookies.sessionId
     if (sessionId) await Session.deleteOne({ sessionId })
 
-    res.clearCookie('sessionId', {
+    res.cookie('sessionId', sessionId, {
       httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production'
+      secure: false, // true on Netlify, false locally
+      sameSite: 'None', // cross-site support only in prod
+      maxAge: 60 * 60 * 1000 // 30 minutes
     })
 
     res.json({ message: 'Logged out successfully' })
