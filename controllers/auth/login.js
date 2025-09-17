@@ -6,15 +6,26 @@ import crypto from 'crypto'
 
 // Production/dev helper for cookie options
 const getCookieOptions = req => {
+  const ua = req.headers['user-agent'] || ''
+  const isIphone = /iPhone|iPad|iPod/i.test(ua)
   const isProduction = process.env.NODE_ENV === 'production'
   const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https'
-  const options = {
+
+  let options = {
     httpOnly: true,
-    secure: isProduction ? isHttps : false,
-    sameSite: isProduction ? 'None' : 'Lax',
-    maxAge: 60 * 60 * 1000 // 1 hour, only relevant for res.cookie (not clearCookie)
+    secure: false,
+    sameSite: 'Lax',
+    maxAge: 60 * 60 * 1000
   }
-  console.log('Cookie options:', options)
+
+  // Always use strict flags over HTTPS, regardless of env/device
+  if (isHttps) {
+    options.secure = true
+    options.sameSite = 'None'
+  }
+
+  console.log('NODE_ENV:', process.env.NODE_ENV)
+  console.log('Cookie options:', options, isProduction)
   return options
 }
 
