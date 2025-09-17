@@ -18,6 +18,7 @@ EventEmitter.defaultMaxListeners = 20
 const app = express()
 
 // middlewares
+app.set('trust proxy', 1)
 app.use(cookieParser())
 dotenv.config()
 app.use(express.json())
