@@ -1,6 +1,5 @@
 import UserInfo from '../../models/userModel.js'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import sendEmail from '../../utilities/sendEmail.js'
 import Session from '../../models/Session.js'
 
