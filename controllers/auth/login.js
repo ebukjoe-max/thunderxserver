@@ -2,8 +2,7 @@ import UserInfo from '../../models/userModel.js'
 import bcrypt from 'bcryptjs'
 import sendEmail from '../../utilities/sendEmail.js'
 import Session from '../../models/Session.js'
-
-const jwtSecret = process.env.JWT_SECRET
+import { jwtSecret } from '../../utilities/jwtSecret.js'
 
 export const login = async (req, res) => {
   const { email, password } = req.body
@@ -26,8 +25,8 @@ export const login = async (req, res) => {
     }
 
     // Create session
-    const sessionId = Math.random().toString(36).substring(2)
-    const expiresAt = new Date(Date.now() + 30 * 60 * 1000) // 30 mins
+    const sessionId = jwtSecret
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000) // 60 mins
 
     await Session.create({
       sessionId,
