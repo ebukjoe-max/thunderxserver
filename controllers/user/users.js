@@ -4,7 +4,7 @@ import UserWallet from '../../models/UserWallet.js'
 
 export const Users = async (req, res) => {
   try {
-    const users = await User.find({})
+    const users = await User.find({}).select('firstname lastname email kyc')
     res.json(users)
   } catch (error) {
     res.status(500).json({ message: 'error', error })

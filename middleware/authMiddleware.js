@@ -2,6 +2,7 @@ import Session from '../models/Session.js'
 import UserInfo from '../models/userModel.js'
 
 export const authMiddleware = async (req, res, next) => {
+  console.log(req.cookies)
   try {
     const { sessionId } = req.cookies
 

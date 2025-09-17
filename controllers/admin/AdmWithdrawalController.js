@@ -18,7 +18,7 @@ export const getWithdrawals = async (req, res) => {
 }
 
 export const updateWithdrawalStatus = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   try {
     const { status } = req.body // "approved" | "rejected" | "pending"
     const withdrawal = await WithdrawalModel.findById(req.params.id).populate(

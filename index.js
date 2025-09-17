@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
+import helmet from 'helmet'
 import mongodbConnection from './configs/mongbDb.js'
 import authRoutes from './routes/auth/auth.js'
 import adminRoutes from './routes/admin/admin.js'
@@ -20,6 +21,7 @@ const app = express()
 // middlewares
 app.set('trust proxy', 1)
 app.use(cookieParser())
+app.use(helmet())
 dotenv.config()
 app.use(express.json())
 const allowedOrigins = [
