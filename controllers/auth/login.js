@@ -43,13 +43,13 @@ export const login = async (req, res) => {
     })
 
     // Set httpOnly cookie
-    const isProd = process.env.NODE_ENV === 'production'
+    const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https'
 
     res.cookie('sessionId', sessionId, {
       httpOnly: true,
-      secure: false, // true on Netlify, false locally
-      sameSite: 'None', // cross-site support only in prod
-      maxAge: 60 * 60 * 1000 // 30 minutes
+      secure: isHttps, // true if HTTPS (Netlify), false if local
+      sameSite: 'None', // always None, since ports/domains differ
+      maxAge: 60 * 60 * 1000
     })
 
     // console.log('Session ID set:', sessionId)
@@ -95,11 +95,18 @@ export const logout = async (req, res) => {
     const sessionId = req.cookies.sessionId
     if (sessionId) await Session.deleteOne({ sessionId })
 
+    const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https'
+
     res.cookie('sessionId', sessionId, {
       httpOnly: true,
-      secure: false, // true on Netlify, false locally
-      sameSite: 'None', // cross-site support only in prod
-      maxAge: 60 * 60 * 1000 // 30 minutes
+      secure: isHttps, // true if HTTPS (Netlify), false if local
+      sameSite: 'None', // always None, since ports/domains differ
+      maxAge: 60 * 60 * 1000
+    })
+    res.clearCookie('sessionId', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
     })
 
     res.json({ message: 'Logged out successfully' })
