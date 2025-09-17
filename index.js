@@ -27,7 +27,6 @@ const allowedOrigins = [
   'http://10.0.1.3:3000',
   'http://192.168.250.88:3000',
   'http://172.20.10.2:3000',
-  'http://192.168.250.88:3000',
   'https://thurderxtorm.netlify.app'
 ]
 
@@ -35,7 +34,7 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, origin)
+        callback(null, true)
       } else {
         callback(new Error('Not allowed by CORS'))
       }

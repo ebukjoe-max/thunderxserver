@@ -26,11 +26,6 @@ export const login = async (req, res) => {
         .json({ status: 'error', message: 'Invalid password' })
     }
 
-    // Generate JWT Token with userId + role
-    const token = jwt.sign({ userId: user._id, role: user.role }, jwtSecret, {
-      expiresIn: '30m'
-    })
-
     // Create session
     const sessionId = Math.random().toString(36).substring(2)
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000) // 30 mins
@@ -97,16 +92,11 @@ export const logout = async (req, res) => {
 
     const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https'
 
-    res.cookie('sessionId', sessionId, {
+    res.clearCookie('sessionId', sessionId, {
       httpOnly: true,
       secure: isHttps, // true if HTTPS (Netlify), false if local
       sameSite: 'None', // always None, since ports/domains differ
       maxAge: 60 * 60 * 1000
-    })
-    res.clearCookie('sessionId', {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production'
     })
 
     res.json({ message: 'Logged out successfully' })
